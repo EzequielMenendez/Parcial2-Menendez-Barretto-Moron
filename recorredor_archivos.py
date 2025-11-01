@@ -1,6 +1,10 @@
 import os
 import csv
-from main import CSV_FILENAME, NIVELES_JERARQUIA, DATA_DIR
+
+DATA_DIR = "clash_royale"
+CSV_FILENAME = "cartas.csv"
+CAMPOS_CSV = ['nombre', 'vida', 'daño']
+NIVELES_JERARQUIA = ['calidad', 'tipo', 'coste_elixir']
 
 def cargar_datos_recursivamente(path, jerarquia_actual=None):
     """
@@ -11,8 +15,7 @@ def cargar_datos_recursivamente(path, jerarquia_actual=None):
         jerarquia_actual = {}
 
     items_totales = []
-
-    # Caso Base: Si es un archivo CSV, lo leemos.
+    #Si el archivo es un csv lo abre y retorna sus cartas(CASO BASE)
     if os.path.isfile(path) and path.endswith(CSV_FILENAME):
         try:
             with open(path, mode='r', newline='', encoding='utf-8') as archivo_csv:
@@ -23,23 +26,19 @@ def cargar_datos_recursivamente(path, jerarquia_actual=None):
         except Exception as e:
             print(f"Error al leer el archivo {path}: {e}")
         return items_totales
-
-    # Paso Recursivo: Si es un directorio, lo recorremos.
+    #Si el archivo es una carpeta la recorre(CASO RECURSIVO)
     if os.path.isdir(path):
+        relative_path = path.replace(DATA_DIR, '').strip(os.sep)
+        depth = len(relative_path.split(os.sep)) if relative_path else 0
+        #Voy guardando la ruta
         for elemento in os.listdir(path):
             ruta_completa = os.path.join(path, elemento)
-            
-            # Determinamos el nivel de profundidad actual para saber qué clave jerárquica usar.
-            relative_path = path.replace(DATA_DIR, '').strip(os.sep)
-            depth = len(relative_path.split(os.sep)) if relative_path else 0
-            
-            # Solo continuamos si la profundidad está dentro de nuestros niveles definidos.
-            if depth < len(NIVELES_JERARQUIA):
-                nueva_jerarquia = jerarquia_actual.copy()
+            nueva_jerarquia = jerarquia_actual.copy()
+
+            if os.path.isdir(ruta_completa) and depth < len(NIVELES_JERARQUIA):
                 key_jerarquia = NIVELES_JERARQUIA[depth]
                 nueva_jerarquia[key_jerarquia] = elemento
-                
-                # Llamada recursiva con la nueva ruta y la jerarquía actualizada.
-                items_totales.extend(cargar_datos_recursivamente(ruta_completa, nueva_jerarquia))
+            
+            items_totales.extend(cargar_datos_recursivamente(ruta_completa, nueva_jerarquia))
 
     return items_totales

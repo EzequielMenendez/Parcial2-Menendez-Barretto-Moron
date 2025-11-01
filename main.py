@@ -1,18 +1,13 @@
 import os
 import sys
 from funciones import *
-from recorredor_archivos import cargar_datos_recursivamente
+from recorredor_archivos import *
 from opciones_menu.alta_carta import alta_carta
 from opciones_menu.mostrar_cartas import mostrar_cartas_totales
 from opciones_menu.filtrar_cartas import filtrar_cartas
 from opciones_menu.modificar_carta import modificar_carta
 from opciones_menu.eliminar_carta import eliminar_carta
 from opciones_menu.funciones_adicionales import funcionalidades_adicionales
-
-DATA_DIR = "clash_royale"
-CSV_FILENAME = "cartas.csv"
-CAMPOS_CSV = ['nombre', 'vida', 'daño']
-NIVELES_JERARQUIA = ['calidad', 'tipo', 'coste_elixir']
 
 def main():
     """Función principal que ejecuta el menú de la aplicación."""
@@ -35,22 +30,23 @@ def main():
 
         opcion = input("\nSeleccione una opción: ")
 
-        if opcion == '1':
-            alta_carta()
-        elif opcion == '2':
-            mostrar_cartas_totales(cartas_globales)
-        elif opcion == '3':
-            filtrar_cartas(cartas_globales)
-        elif opcion == '4':
-            modificar_carta(cartas_globales)
-        elif opcion == '5':
-            eliminar_carta(cartas_globales)
-        elif opcion == '6':
-            funcionalidades_adicionales(cartas_globales)
-        elif opcion == '0':
-            print("¡Nos vemos en la arena!"); sys.exit(0)
-        else:
-            print("Opción no válida. Intente de nuevo.")
+        match opcion:
+            case "1":
+                alta_carta()
+            case "2":
+                mostrar_cartas_totales(cartas_globales)
+            case "3":
+                filtrar_cartas(cartas_globales)
+            case "4":
+                modificar_carta(cartas_globales)
+            case "5":
+                eliminar_carta(cartas_globales)
+            case "6":
+                funcionalidades_adicionales(cartas_globales)
+            case "0":
+                print("¡Nos vemos en la arena!"); sys.exit(0)
+            case _:
+                print("Opción no válida. Intente de nuevo.")
 
         input("\nPresione Enter para continuar...")
 

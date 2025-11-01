@@ -11,14 +11,15 @@ def funcionalidades_adicionales(cartas):
         print("3. Volver al menú principal")
         opcion = input("Seleccione una opción: ")
 
-        if opcion == '1':
-            ordenar_cartas(cartas)
-        elif opcion == '2':
-            mostrar_estadisticas(cartas)
-        elif opcion == '3':
-            break
-        else:
-            print("Opción no válida.")
+        match opcion:
+            case "1":
+                ordenar_cartas(cartas)
+            case "2":
+                mostrar_estadisticas(cartas)
+            case "3":
+                break
+            case _:
+                print("Opción no válida.")
         input("\nPresione Enter para continuar...")
 
 def ordenar_cartas(cartas):
@@ -33,6 +34,7 @@ def ordenar_cartas(cartas):
 
     lista_ordenada = []
     if criterio == '1':
+        #Se ordena con key:lambda para filtrar solo por el atributo
         lista_ordenada = sorted(cartas, key=lambda x: x.get('nombre', '').lower())
         print("\n--- Cartas ordenadas por Nombre ---")
     elif criterio == '2':
@@ -55,12 +57,12 @@ def mostrar_estadisticas(cartas):
 
     total_cartas = len(cartas)
     print(f"Cantidad total de cartas registradas: {total_cartas}")
-
+    #promedio de daño
     daños = [int(c.get('daño', 0)) for c in cartas]
     daño_total = sum(daños)
     promedio_daño = daño_total / total_cartas if total_cartas > 0 else 0
     print(f"Daño promedio por carta: {promedio_daño:,.2f}")
-    
+    #Realizo un contador de calidades
     conteo_por_calidad = {}
     for carta in cartas:
         calidad = carta.get('calidad', 'Desconocida')

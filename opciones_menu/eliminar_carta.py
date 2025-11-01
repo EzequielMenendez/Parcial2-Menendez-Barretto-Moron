@@ -1,5 +1,5 @@
 from funciones import *
-from main import CSV_FILENAME, NIVELES_JERARQUIA, DATA_DIR
+from recorredor_archivos import CSV_FILENAME, NIVELES_JERARQUIA, DATA_DIR
 
 def eliminar_carta(cartas):
     """Busca una carta y la elimina, persistiendo el cambio."""
@@ -8,13 +8,14 @@ def eliminar_carta(cartas):
     if not cartas:
         print("No hay cartas para eliminar."); return
 
+    #Se ingresa una carta y se buscan coincidencias
     nombre_carta = input("Ingrese el nombre exacto de la carta a eliminar: ").strip()
     coincidencias = [c for c in cartas if c.get('nombre', '').lower() == nombre_carta.lower()]
-
     if not coincidencias:
         print(f"No se encontró '{nombre_carta}'."); return
 
     carta_a_eliminar = coincidencias[0]
+    #Si hay varias coincidencias se selecciona una para eliminar
     if len(coincidencias) > 1:
         print("Se encontraron varias cartas con ese nombre. Seleccione una:")
         for i, c in enumerate(coincidencias):
@@ -29,14 +30,13 @@ def eliminar_carta(cartas):
         except ValueError:
             print("Entrada no válida."); return
 
-    if input(f"¿Seguro que desea eliminar '{carta_a_eliminar['nombre']}'? (s/n): ").lower() != 's':
-        print("Eliminación cancelada."); return
-
     try:
+        #Se elimina la carta de la lista
         cartas.remove(carta_a_eliminar)
         valores_jerarquia = [str(carta_a_eliminar.get(nivel)) for nivel in NIVELES_JERARQUIA]
         ruta_archivo_csv = os.path.join(DATA_DIR, *valores_jerarquia, CSV_FILENAME)
-
+        #se genera una lista que compara la calidad, tipo y elixir de la carta a eliminar para validar si se encuentra en el mismo archivo que la carta a eliminar
+        #y guarda las coincidencias
         items_del_mismo_archivo = [
             c for c in cartas if all(str(c.get(n)) == str(carta_a_eliminar.get(n)) for n in NIVELES_JERARQUIA)
         ]

@@ -1,4 +1,4 @@
-from main import NIVELES_JERARQUIA
+from recorredor_archivos import NIVELES_JERARQUIA
 from funciones import *
 
 def mostrar_cartas_totales(cartas):
@@ -8,11 +8,10 @@ def mostrar_cartas_totales(cartas):
     if not cartas:
         print("No hay cartas para mostrar.")
         return
-
+    #ordena las cartas con key=lambda
     cartas_ordenadas = sorted(cartas, key=lambda x: (x.get('calidad', ''), x.get('nombre', '')))
-
+    #Muestra las cartas
     for carta in cartas_ordenadas:
         jerarquia = " / ".join([str(carta.get(nivel, 'N/A')) for nivel in NIVELES_JERARQUIA])
-        # Se elimina la visualización de la evolución
         print(f"[{jerarquia}] -> Nombre: {carta.get('nombre')}, "
             f"Vida: {carta.get('vida')}, Daño: {carta.get('daño')}")

@@ -1,4 +1,4 @@
-from main import CSV_FILENAME, NIVELES_JERARQUIA, DATA_DIR, CAMPOS_CSV
+from recorredor_archivos import CSV_FILENAME, NIVELES_JERARQUIA, DATA_DIR, CAMPOS_CSV
 from funciones import *
 
 def alta_carta():
@@ -10,52 +10,37 @@ def alta_carta():
     print("--- Alta de Nueva Carta ---")
     
     valores_jerarquia = {}
-    # 1. Bucle de validación para datos jerárquicos
+    # Hace un buqule por cada nivel de jerarquía
     for nivel in NIVELES_JERARQUIA:
+        #Se usa while para validar ingreso correcto de datos
         while True:
             prompt = f"Ingrese {nivel.replace('_', ' ').title()}: "
             valor = input(prompt).strip()
             if not valor:
                 print("Error: Este campo no puede estar vacío.")
                 continue
-
+            
+            #Si es el ultimo nivel de jerarquía guarda el valor y rompe el ciclo. Si no continua recorriendo
             if nivel == 'coste_elixir':
                 elixir_validado = validar_entero_no_negativo(valor)
                 if elixir_validado is not None:
                     valor = str(elixir_validado)
-                    break
                 else:
-                    continue # La función de validación ya imprimió el error
+                    print("El elixir debe ser un número no negativo.")
+                    continue
             
             valores_jerarquia[nivel] = valor
             break
 
-    # 2. Bucle de validación para atributos de la carta
+    #se piden los datos de la carta
     nueva_carta = {}
-    while True:
-        nombre = input("Ingrese el Nombre de la carta: ").strip()
-        if nombre:
-            nueva_carta['nombre'] = nombre
-            break
-        else:
-            print("Error: El nombre no puede estar vacío.")
+    nueva_carta['nombre'] = pedir_texto("Ingrese el nombre de la carta: ")
+    nueva_carta['vida'] = pedir_entero("Ingrese los Puntos de Vida: ")
+    nueva_carta['daño'] = pedir_entero("Ingrese el Daño: ")
 
-    while True:
-        vida_str = input("Ingrese los Puntos de Vida (0 para hechizos): ")
-        vida = validar_entero_no_negativo(vida_str)
-        if vida is not None:
-            nueva_carta['vida'] = vida
-            break
-
-    while True:
-        daño_str = input("Ingrese el Daño (0 si no aplica): ")
-        daño = validar_entero_no_negativo(daño_str)
-        if daño is not None:
-            nueva_carta['daño'] = daño
-            break
-
-    # 3. Persistencia
+    #Se guardan los datos en el csv
     try:
+        # Esta línea ahora recibirá los 3 valores y funcionará
         ruta_jerarquica = os.path.join(DATA_DIR, *valores_jerarquia.values())
         os.makedirs(ruta_jerarquica, exist_ok=True)
         

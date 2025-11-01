@@ -1,4 +1,4 @@
-from main import CSV_FILENAME, NIVELES_JERARQUIA, DATA_DIR, CAMPOS_CSV
+from recorredor_archivos import CSV_FILENAME, NIVELES_JERARQUIA, DATA_DIR, CAMPOS_CSV
 from funciones import *
 
 def modificar_carta(cartas):
@@ -14,11 +14,21 @@ def modificar_carta(cartas):
     if not coincidencias:
         print(f"No se encontró ninguna carta con el nombre '{nombre_carta}'."); return
     
-    # Lógica para seleccionar una carta si hay duplicados
     carta_a_modificar = coincidencias[0]
+    #Si hay varias coincidencias se selecciona una para modificar
     if len(coincidencias) > 1:
-        # (El código para manejar duplicados se mantiene igual)
-        pass # Placeholder for brevity
+        print("Se encontraron varias cartas con ese nombre. Seleccione una:")
+        for i, c in enumerate(coincidencias):
+            jerarquia = " / ".join([str(c.get(nivel, 'N/A')) for nivel in NIVELES_JERARQUIA])
+            print(f"{i + 1}. [{jerarquia}] -> {c.get('nombre')}")
+        try:
+            opcion = int(input("Seleccione el número: ")) - 1
+            if 0 <= opcion < len(coincidencias):
+                carta_a_modificar = coincidencias[opcion]
+            else:
+                print("Opción no válida."); return
+        except ValueError:
+            print("Entrada no válida."); return
 
     print(f"\nAtributos modificables: {', '.join(CAMPOS_CSV)}")
     atributo = input("¿Qué atributo desea modificar?: ").strip().lower()
@@ -26,34 +36,30 @@ def modificar_carta(cartas):
     if atributo not in CAMPOS_CSV:
         print("Error: Atributo no válido."); return
 
-    # Bucle de validación para el nuevo valor
-    while True:
-        nuevo_valor_str = input(f"Ingrese el nuevo valor para '{atributo}': ").strip()
-        valor_validado = None
-        if atributo in ['vida', 'daño']:
-            valor_validado = validar_entero_no_negativo(nuevo_valor_str)
-        elif atributo == 'nombre':
-            if nuevo_valor_str:
-                valor_validado = nuevo_valor_str
-            else:
-                print("El nombre no puede estar vacío.")
-
-        if valor_validado is not None:
-            break # Salimos del bucle si el valor es válido
-    
-    # Actualizar en memoria y persistir
+    # Se ingresa el nuevo valor
     item_original = carta_a_modificar.copy()
-    carta_a_modificar[atributo] = valor_validado
+    mensaje = f"Ingrese el nuevo valor para '{atributo}': "
+    if atributo in ['vida', 'daño']:
+        carta_a_modificar[atributo] = pedir_entero(mensaje)
+    elif atributo == 'nombre':
+        carta_a_modificar[atributo] = pedir_texto(mensaje)
 
     try:
-        # (El resto de la lógica para guardar el archivo se mantiene igual)
+        #se guarda la jerarquía de archivos
         valores_jerarquia = [str(carta_a_modificar.get(nivel)) for nivel in NIVELES_JERARQUIA]
         ruta_archivo_csv = os.path.join(DATA_DIR, *valores_jerarquia, CSV_FILENAME)
-        items_del_mismo_archivo = [c for c in cartas if all(str(c.get(n)) == str(carta_a_modificar.get(n)) for n in NIVELES_JERARQUIA)]
+
+        # Se filtra la lista global para encontrar todas las cartas que están en el mismo archivo
+        # que la 'carta_a_modificar'. Compara la calidad, tipo y coste_elixir de cada
+        # carta con la carta modificada para asegurar que se sobrescriba solo el archivo correcto.
+        items_del_mismo_archivo = [
+            c for c in cartas if all(str(c.get(n)) == str(carta_a_modificar.get(n)) for n in NIVELES_JERARQUIA)
+        ]
+        
         if guardar_lista_en_csv(ruta_archivo_csv, items_del_mismo_archivo):
             print("\n¡Carta modificada con éxito!")
         else:
-            # Revertir cambio en memoria
+            # Revertir cambio en memoria si falla la escritura
             carta_a_modificar.clear()
             carta_a_modificar.update(item_original)
             print("\nNo se pudo guardar la modificación.")
