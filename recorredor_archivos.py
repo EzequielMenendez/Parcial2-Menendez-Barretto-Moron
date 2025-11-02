@@ -31,14 +31,20 @@ def cargar_datos_recursivamente(path, jerarquia_actual=None):
         relative_path = path.replace(DATA_DIR, '').strip(os.sep)
         depth = len(relative_path.split(os.sep)) if relative_path else 0
         #Voy guardando la ruta
-        for elemento in os.listdir(path):
-            ruta_completa = os.path.join(path, elemento)
-            nueva_jerarquia = jerarquia_actual.copy()
+        try:
+            #Voy guardando la ruta
+            for elemento in os.listdir(path):
+                ruta_completa = os.path.join(path, elemento)
+                nueva_jerarquia = jerarquia_actual.copy()
 
-            if os.path.isdir(ruta_completa) and depth < len(NIVELES_JERARQUIA):
-                key_jerarquia = NIVELES_JERARQUIA[depth]
-                nueva_jerarquia[key_jerarquia] = elemento
-            
-            items_totales.extend(cargar_datos_recursivamente(ruta_completa, nueva_jerarquia))
-
+                if os.path.isdir(ruta_completa) and depth < len(NIVELES_JERARQUIA):
+                    key_jerarquia = NIVELES_JERARQUIA[depth]
+                    nueva_jerarquia[key_jerarquia] = elemento
+                
+                items_totales.extend(cargar_datos_recursivamente(ruta_completa, nueva_jerarquia))
+        
+        except PermissionError:
+            print(f"Error: No se tienen permisos para acceder a la carpeta {path}.")
+        except OSError as e:
+            print(f"Error del sistema al leer la carpeta {path}: {e}")
     return items_totales

@@ -63,5 +63,9 @@ def modificar_carta(cartas):
             carta_a_modificar.clear()
             carta_a_modificar.update(item_original)
             print("\nNo se pudo guardar la modificación.")
+    except ValueError:
+        print("Error de lógica: La carta a modificar no fue encontrada en la lista de memoria.")
+    except (IOError, PermissionError) as e:
+        print(f"Error al escribir en el archivo: No se pudo guardar el cambio. {e}")
     except Exception as e:
-        print(f"Error al intentar guardar la modificación: {e}")
+        print(f"Ocurrió un error inesperado durante la modificación: {e}")

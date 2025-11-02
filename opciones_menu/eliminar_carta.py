@@ -46,5 +46,9 @@ def eliminar_carta(cartas):
         else:
             cartas.append(carta_a_eliminar) # Revertir
             print("\nNo se pudo persistir la eliminación.")
+    except ValueError:
+        print("Error de lógica: La carta a eliminar no fue encontrada en la lista de memoria.")
+    except (IOError, PermissionError) as e:
+        print(f"Error al escribir en el archivo: No se pudo guardar el cambio. {e}")
     except Exception as e:
-        print(f"Error durante la eliminación: {e}")
+        print(f"Ocurrió un error inesperado durante la eliminación: {e}")
