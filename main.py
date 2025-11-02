@@ -1,5 +1,4 @@
 import os
-import sys
 from funciones import *
 from recorredor_archivos import *
 from opciones_menu.agregar_carta import agregar_carta
@@ -18,7 +17,7 @@ def main():
         limpiar_pantalla()
         cartas_globales = cargar_datos_recursivamente(DATA_DIR)
         
-        print("--- Gestor de Cartas de Clash Royale ---")
+        print("=== Gestor de Cartas de Clash Royale ===")
         print("\nMenú Principal:")
         print("1. Agregar Nueva Carta")
         print("2. Mostrar Todas las Cartas")
