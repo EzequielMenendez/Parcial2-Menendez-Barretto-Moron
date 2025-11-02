@@ -2,7 +2,7 @@ import os
 import sys
 from funciones import *
 from recorredor_archivos import *
-from opciones_menu.alta_carta import alta_carta
+from opciones_menu.agregar_carta import agregar_carta
 from opciones_menu.mostrar_cartas import mostrar_cartas_totales
 from opciones_menu.filtrar_cartas import filtrar_cartas
 from opciones_menu.modificar_carta import modificar_carta
@@ -20,7 +20,7 @@ def main():
         
         print("--- Gestor de Cartas de Clash Royale ---")
         print("\nMenú Principal:")
-        print("1. Alta de Nueva Carta")
+        print("1. Agregar Nueva Carta")
         print("2. Mostrar Todas las Cartas")
         print("3. Filtrar Cartas")
         print("4. Modificar Carta")
@@ -32,7 +32,7 @@ def main():
 
         match opcion:
             case "1":
-                alta_carta()
+                agregar_carta()
             case "2":
                 mostrar_cartas_totales(cartas_globales)
             case "3":
