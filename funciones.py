@@ -38,7 +38,7 @@ def guardar_lista_en_csv(ruta_archivo, lista_items):
 
 #Función para pedir un texto
 def pedir_texto(mensaje):
-    """Pide un string por consola, valida el texto y que el país no este repetido"""
+    """Pide un string por consola, valida el texto y que la carta no este repetida"""
     while True:
         valor = input(mensaje)
         texto_valido = validar_texto(valor)

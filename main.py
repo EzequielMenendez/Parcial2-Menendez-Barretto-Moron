@@ -44,7 +44,7 @@ def main():
             case "6":
                 funcionalidades_adicionales(cartas_globales)
             case "0":
-                print("¡Nos vemos en la arena!"); sys.exit(0)
+                print("¡Nos vemos en la Arena!"); sys.exit(0)
             case _:
                 print("Opción no válida. Intente de nuevo.")
 

@@ -15,7 +15,7 @@ def agregar_carta():
         #Se usa while para validar ingreso correcto de datos
         while True:
             prompt = f"Ingrese {nivel.replace('_', ' ').title()}: "
-            valor = input(prompt).strip()
+            valor = input(prompt).strip().lower()
             if not valor:
                 print("Error: Este campo no puede estar vacío.")
                 continue
