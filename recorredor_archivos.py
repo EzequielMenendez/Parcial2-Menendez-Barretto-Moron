@@ -65,6 +65,7 @@ def cargar_datos_recursivamente(path, jerarquia_actual=None):
 
                 #Si el elemento actual es una carpeta y faltan niveles de jerarquía
                 if os.path.isdir(ruta_completa) and profundidad < len(NIVELES_JERARQUIA):
+                    #Se obtiene el nombre del nivel jerarquico y se le asigna el elemento
                     key_jerarquia = NIVELES_JERARQUIA[profundidad]
                     nueva_jerarquia[key_jerarquia] = elemento
                 
