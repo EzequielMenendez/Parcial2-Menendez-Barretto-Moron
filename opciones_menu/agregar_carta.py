@@ -1,13 +1,13 @@
 from recorredor_archivos import CSV_FILENAME, NIVELES_JERARQUIA, DATA_DIR, CAMPOS_CSV
 from funciones import *
 
-def alta_carta():
+def agregar_carta():
     """
-    Da de alta una nueva carta, pidiendo datos al usuario con validación en bucle
+    Agrega una nueva carta, pidiendo datos al usuario con validación en bucle
     y creando la estructura de directorios si es necesario.
     """
     limpiar_pantalla()
-    print("--- Alta de Nueva Carta ---")
+    print("--- Agregar Nueva Carta ---")
     
     valores_jerarquia = {}
     # Hace un buqule por cada nivel de jerarquía
